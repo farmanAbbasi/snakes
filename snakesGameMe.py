@@ -4,7 +4,16 @@ import random
 import winsound
 from playsound import playsound
 
-def checkCollision(segments):
+startdelay=0.2
+delay=startdelay# for speed of snake
+segments=[]
+# Score
+score = 0
+high_score = 0
+#random colors
+colors  = ["red","green","blue","orange","purple","pink","yellow","white"]
+c=''
+def collision(segments):
     #stopping bg music and playing dying sound
         winsound.PlaySound(None, winsound.SND_ASYNC)
         playsound('gameover.wav',False)
@@ -17,26 +26,14 @@ def checkCollision(segments):
             segment.goto(1000, 1000)
             
         #Clear the segments
-        segments=[]
+        segments.clear()
 
         #Update score after collision
         score=0
         pen.clear()
         pen.write('Score: {0}   High Score: {1}'.format(score,high_score),align='center',font=('Arial',22,'normal','bold'))
         
-        #Reset Delay
-        delay=0.2
     
-
-delay=0.2# for speed of snake
-segments=[]
-# Score
-score = 0
-high_score = 0
-#random colors
-colors  = ["red","green","blue","orange","purple","pink","yellow","white"]
-c=''
-
 # Set up the screen
 wn=turtle.Screen()
 wn.title("Snake Game")
@@ -156,19 +153,21 @@ while True:
         pen.write('Score: {0}   High Score: {1}'.format(score,high_score),align='center',font=('Arial',22,'normal','bold'))
 
         # Shorten the delay
-        if delay !=0.01:# so that it is never zero
+        if delay !=0.005:# so that it is never zero
             delay -= 0.005
-        else:
-            delay-=0.001
 
     #Check for collision with border------------------------------------------------------------------------------------------------------------------------------------
     if head.xcor()>290 or head.xcor()<-290 or head.ycor()>290 or head.ycor()<-290:
-        checkCollision(segments)      
+        collision(segments)
+        #Reset Delay
+        delay=startdelay
 
     #Check for collision with self------------------------------------------------------------------------------------------------------------------------------------
     for segment in segments:
         if head.distance(segment)<20:
-            checkCollision(segments)            
+            collision(segments)
+            #Reset Delay
+            delay=startdelay
 
     #Append food-------------------------------------------------------------------------------------------------------------------------------------------------
     #abhi toh only segment is added on screen and on the segments array
